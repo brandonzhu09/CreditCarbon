@@ -16,20 +16,14 @@ public class ApiConfigTest {
 
         TransactionRequest t1 = new TransactionRequest(
                 "123",
-                "5045",
+                "2842",
                 25,
                 "MA"
         );
-        TransactionRequest t2 = new TransactionRequest(
-                    "1234",
-                    "3997",
-                    30,
-                    "MA"
-            );
 
         ApiClient apiClient = new ApiClient();
 
-        apiClient.sendTransactionData(List.of(t1, t2));
+        apiClient.sendTransactionData(List.of(t1));
 
         };
     }
