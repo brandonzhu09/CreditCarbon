@@ -27,6 +27,24 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mastercard.developer</groupId>
+			<artifactId>oauth1-signer</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mastercard.developer</groupId>
+			<artifactId>client-encryption</artifactId>
+			<version>1.7.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>

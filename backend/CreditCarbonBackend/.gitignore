@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/shahryarkiani04-encryption-mc.p12
+/src/main/resources/hoohacks-sandbox.p12
