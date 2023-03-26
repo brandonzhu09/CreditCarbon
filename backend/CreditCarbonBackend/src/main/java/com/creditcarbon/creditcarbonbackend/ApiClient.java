@@ -1,85 +1,106 @@
 package com.creditcarbon.creditcarbonbackend;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mastercard.developer.encryption.FieldLevelEncryption;
-import com.mastercard.developer.encryption.FieldLevelEncryptionConfigBuilder;
 import com.mastercard.developer.signers.OkHttpSigner;
 import com.mastercard.developer.utils.AuthenticationUtils;
-import com.mastercard.developer.utils.EncryptionUtils;
 import okhttp3.*;
+import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ApiClient {
 
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private static FieldLevelEncryption fieldLevelEncrytion = null;
+    private final OkHttpClient client;
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private final String consumerKey = "iC1ZTMs-DrQjpZrg0eRTDVJc5C6PodbOyFzDUlwY32d294cb!a2fd2e42c55d466fbb0ce2e063d1df8f0000000000000000";
+    private final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    private final OkHttpSigner signer;
+
+    private final PrivateKey signingKey;
+
+    public ApiClient() {
+        try {
+            client = new OkHttpClient();
+            signingKey = AuthenticationUtils.loadSigningKey(
+                    "C:\\Users\\shahr\\IdeaProjects\\CreditCarbon\\backend\\CreditCarbonBackend\\src\\main\\resources\\hoohacks-sandbox.p12",
+                    "keyalias",
+                    "keystorepassword"
+            );
+            signer = new OkHttpSigner(consumerKey, signingKey);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to intialize ApiClient");
+        }
 
 
-    public void initalizeFieldEncrytion() throws URISyntaxException, FileNotFoundException, CertificateException {
-        String encryptPath = Paths.get(this.getClass().getClassLoader().getResource("carbon_calculatorClientEnc1679770975.pem").toURI()).toFile().getAbsolutePath();
-        Certificate encryptCert = EncryptionUtils.loadEncryptionCertificate(encryptPath);
-
-        FieldLevelEncryptionConfigBuilder.aFieldLevelEncryptionConfig()
-                .withEncryptionCertificate(encryptCert);
     }
 
-    public void sendTransactionData(List<TransactionRequest> transactions) throws UnrecoverableKeyException, CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
+    public List<TransactionResult> sendTransactionData(List<TransactionRequest> transactions) {
 
         System.out.println("SENDING REQUEST");
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        String consumerKey = "iC1ZTMs-DrQjpZrg0eRTDVJc5C6PodbOyFzDUlwY32d294cb!a2fd2e42c55d466fbb0ce2e063d1df8f0000000000000000";
-
-        PrivateKey signingKey = AuthenticationUtils.loadSigningKey(
-                "C:\\Users\\shahr\\IdeaProjects\\CreditCarbon\\backend\\CreditCarbonBackend\\src\\main\\resources\\hoohacks-sandbox.p12",
-                "keyalias",
-                "keystorepassword"
-        );
 
         StringWriter sw = new StringWriter();
 
 
-        mapper.writeValue(sw, transactions);
+        TransactionResult[] resultList;
+        try {
+            mapper.writeValue(sw, transactions);
 
-        String payload = sw.toString();
-        sw.close();
+            String payload = sw.toString();
 
-        System.out.println(payload);
+            sw.close();
 
-        OkHttpClient client = new OkHttpClient();
+            RequestBody body = RequestBody.create(JSON, payload);
+
+            Request.Builder request = new Request.Builder().url("https://sandbox.api.mastercard.com/carbon/transaction-footprints").post(body);
+
+            signer.sign(request);
+
+            Call call = client.newCall(request.build());
+
+            Response response = call.execute();
+
+
+            String json = response.body().string();
+            resultList = mapper.readValue(json, TransactionResult[].class);
+        } catch (IOException e) {
+            throw new RuntimeException("Error in send transactions");
+        }
+
+        return new ArrayList<>(List.of(resultList));
+
+    }
+
+
+    public int getTreesForDollars(double amount) {
+        String payload = "{" + "\"donation_amount\":" + amount + ",\"currency\":USD";
 
         RequestBody body = RequestBody.create(JSON, payload);
 
-        Request.Builder request = new Request.Builder().url("https://sandbox.api.mastercard.com/carbon/transaction-footprints").post(body);
-
-        OkHttpSigner signer = new OkHttpSigner(consumerKey, signingKey);
-
-        signer.sign(request);
+        Request.Builder request = new Request.Builder().url("https://sandbox.api.mastercard.com/priceless-planet-coalition/impact-metrics").post(body);
 
         Call call = client.newCall(request.build());
+        try {
+            Response response = call.execute();
 
-        Response response = call.execute();
+            JsonNode json = mapper.readTree(response.body().string());
 
-        var typeFactory = mapper.getTypeFactory();
-
-        String json = response.body().string();
-        TransactionResult[] resultList = mapper.readValue(json, TransactionResult[].class);
-
-        System.out.println(resultList[0].category().mainCategory() + "  " +  resultList[0].category().subCategory());
+            return (int) json.get("trees").asDouble();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Unable to get tree data");
+        }
 
 
     }
