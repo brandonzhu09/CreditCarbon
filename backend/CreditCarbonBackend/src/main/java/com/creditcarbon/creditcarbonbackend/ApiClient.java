@@ -1,5 +1,6 @@
 package com.creditcarbon.creditcarbonbackend;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mastercard.developer.signers.OkHttpSigner;
 import com.mastercard.developer.utils.AuthenticationUtils;
@@ -78,6 +79,29 @@ public class ApiClient {
         }
 
         return new ArrayList<>(List.of(resultList));
+
+    }
+
+
+    public int getTreesForDollars(double amount) {
+        String payload = "{" + "\"donation_amount\":" + amount + ",\"currency\":USD";
+
+        RequestBody body = RequestBody.create(JSON, payload);
+
+        Request.Builder request = new Request.Builder().url("https://sandbox.api.mastercard.com/priceless-planet-coalition/impact-metrics").post(body);
+
+        Call call = client.newCall(request.build());
+        try {
+            Response response = call.execute();
+
+            JsonNode json = mapper.readTree(response.body().string());
+
+            return (int) json.get("trees").asDouble();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Unable to get tree data");
+        }
+
 
     }
 
