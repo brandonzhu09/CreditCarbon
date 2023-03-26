@@ -1,3 +1,6 @@
+* {
+  font-family: Merriweather;
+}
 .main-header {
   max-width: screen;
   background-image: url("./assets/header-background.jpg");
