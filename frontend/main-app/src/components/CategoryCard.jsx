@@ -25,7 +25,7 @@ function CategoryCard(props) {
 
   return (
     <div class="bg-gray-100 my-4 rounded p-5 max-w-full overflow-hidden shadow-lg h-72">
-      <div class="flex" style={{ width: 1220, height: 170 }}>
+      <div class="flex justify-center" style={{ height: 170 }}>
         <VisibilitySensor>
           {({ isVisible }) => {
             const percentage = isVisible ? score1 : score1;
