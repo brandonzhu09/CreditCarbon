@@ -74,7 +74,13 @@ public class ApiClient {
 
         Response response = call.execute();
 
-        System.out.println(response.body().string());
+        var typeFactory = mapper.getTypeFactory();
+
+        String json = response.body().string();
+        TransactionResult[] resultList = mapper.readValue(json, TransactionResult[].class);
+
+        System.out.println(resultList[0].category().mainCategory() + "  " +  resultList[0].category().subCategory());
+
 
     }
 
