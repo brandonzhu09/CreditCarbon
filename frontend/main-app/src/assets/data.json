@@ -1,0 +1,26 @@
+[
+    {
+        "category": "FOOD",
+        "amountInKg": 133,
+        "totalSpending": 464.0,
+        "percentage": 41
+    },
+    {
+        "category": "SHOPPING",
+        "amountInKg": 72,
+        "totalSpending": 365.0,
+        "percentage": 22
+    },
+    {
+        "category": "ENTERTAINMENT",
+        "amountInKg": 12,
+        "totalSpending": 142.0,
+        "percentage": 3
+    },
+    {
+        "category": "TRANSPORTATION",
+        "amountInKg": 105,
+        "totalSpending": 175.0,
+        "percentage": 32
+    }
+]

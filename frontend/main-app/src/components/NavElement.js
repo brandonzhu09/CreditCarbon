@@ -3,20 +3,30 @@ import { NavLink as Link } from 'react-router-dom'
 
 export const PrimaryNav = styled.nav`
     display: flex;
-    justify-content: space-between;
-    padding: 0.18rem calc((100vw - 1000px) / 2);
+    justify-content: end;
+    align-items: center;
+    height: 120px;
+    background: #D9D9D9;
 `
 
 export const MenuLink = styled(Link)`
-    display: flex;
-    cursor: pointer;
     align-items: center;
     text-decoration: none;
-    padding: 0 1.2rem;
-    height: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    background-color: none;
+    transition: 0.3s;
+    &:hover,
+    &:focus {
+        background-color: rgba(16, 185, 129);
+    }
 `
 
 export const Menu = styled.div`
-    display: flex;
-    align-items: center;
+    padding-right: 60px;
+`
+
+export const Logo = styled(Link)`
+    flex: 2 3 0;
+    padding-left: 30px;
 `
