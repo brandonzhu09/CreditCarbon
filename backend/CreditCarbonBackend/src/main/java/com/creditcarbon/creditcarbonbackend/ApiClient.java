@@ -83,23 +83,34 @@ public class ApiClient {
     }
 
 
-    public int getTreesForDollars(double amount) {
-        String payload = "{" + "\"donation_amount\":" + amount + ",\"currency\":USD";
+    public int getTreesForDollars(int amount) {
+
+
+        String payload = "{" + "\"donation_amount\":" + amount + ",\"currency\":USD}";
 
         RequestBody body = RequestBody.create(JSON, payload);
 
         Request.Builder request = new Request.Builder().url("https://sandbox.api.mastercard.com/priceless-planet-coalition/impact-metrics").post(body);
 
-        Call call = client.newCall(request.build());
+
         try {
+
+            signer.sign(request);
+
+            Call call = client.newCall(request.build());
+
             Response response = call.execute();
 
-            JsonNode json = mapper.readTree(response.body().string());
+            String resBody = response.body().string();
+
+            System.out.println(resBody);
+
+            JsonNode json = mapper.readTree(resBody);
 
             return (int) json.get("trees").asDouble();
         }
         catch (IOException e) {
-            throw new RuntimeException("Unable to get tree data");
+            throw new RuntimeException(e);
         }
 
 
