@@ -10,10 +10,16 @@ export const PrimaryNav = styled.nav`
 `
 
 export const MenuLink = styled(Link)`
-    cursor: pointer;
     align-items: center;
     text-decoration: none;
-    padding: 0 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    background-color: none;
+    transition: 0.3s;
+    &:hover,
+    &:focus {
+        background-color: rgba(16, 185, 129);
+    }
 `
 
 export const Menu = styled.div`

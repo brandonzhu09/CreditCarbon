@@ -6,4 +6,11 @@
   height: 500px;
 }
 
+.menu-link {
+  background-color: none;
+  transition: 0.3s;
+}
 
+.menu-link:hover {
+  background-color: rgba(16, 185, 129, var(--tw-border-opacity));
+}
