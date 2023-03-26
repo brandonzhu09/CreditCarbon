@@ -1,17 +1,20 @@
 import Navbar from "../../components/Navbar";
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import OverviewCard from "../../components/OverviewCard";
+import CategoryCard from "../../components/CategoryCard";
 
 function Calculator() {
 
     const percentage = 66;
 
     return (
-        <div style={{ width: 150, height: 100 }}>
-            <CircularProgressbar value={55} />
-            <CircularProgressbar value={66} />
-            <CircularProgressbar value={86} />
-            
+        <div>
+            <Navbar />
+            <div class="m-4">
+                <h1 class="font-bold text-3xl">Dashboard</h1>
+                <OverviewCard />
+                <h1 class="font-bold text-3xl">Categories</h1>
+                <CategoryCard />
+            </div>
         </div>
     )
 }
