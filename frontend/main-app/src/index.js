@@ -5,17 +5,28 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Landing from './features/landing/Landing';
+import About from './features/about-us/AboutUs';
+import Calculator from './features/calculator/Calculator';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Landing />,
     // errorElement: <ErrorPage />,
     children: [
       {
       },
     ],
+  },
+  {
+    path: "/about-us",
+    element: <About />,
+  },
+  {
+    path: "/calculator",
+    element: <Calculator />,
   },
 ]);
 
